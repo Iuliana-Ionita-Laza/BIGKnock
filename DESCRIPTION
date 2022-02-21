@@ -6,7 +6,7 @@ Author: Shiyang Ma, Zihuai He, Iuliana Ionita-Laza
 Maintainer: Shiyang Ma <sm4857@cumc.columbia.edu>
 Description: Functions for knockoff generation of gene and enhancers under biobank-scale data and conduct gene-based association test for related samples under fitted null GLMM.
 License: GPL-3
-Depends: R(>= 3.5.0)
+Depends: R(>= 3.6.0)
 Imports:
     SKAT,
     Matrix, 

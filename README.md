@@ -1,6 +1,6 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 # BIGKnock 
-This is an R package of BIobank-scale Gene-based association test via Knockoffs.
+This is an R package of performing biobank-scale gene-based association test via knockoffs.
 
 ## Description
 The package contain functions for knockoff generation of gene and enhancers under biobank-scale data and conduct gene-based association test for related samples under fitted null GLMM.

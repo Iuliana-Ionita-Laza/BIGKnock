@@ -1,6 +1,5 @@
-[![R-CMD-check](https://github.com/Iuliana-Ionita-Laza/GeneScan3DKnock/workflows/R-CMD-check/badge.svg)](https://github.com/Iuliana-Ionita-Laza/BIGKnock/actions)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-# GeneScan3DKnock 
+# BIGKnock 
 This is an R package of BIobank-scale Gene-based association test via Knockoffs.
 
 ## Description

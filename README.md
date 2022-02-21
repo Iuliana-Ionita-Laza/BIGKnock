@@ -14,6 +14,7 @@ BIGKnock depends on R packages SKAT, Matrix, MASS, SPAtest, CompQuadForm and irl
     
 ## Installation
 library(devtools) 
+
 devtools::install_github("Iuliana-Ionita-Laza/BIGKnock")
 
 The current version is 0.1 (February 20, 2022).

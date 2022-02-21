@@ -6,7 +6,7 @@ This is an R package of performing biobank-scale gene-based association test via
 The package contain functions for knockoff generation of gene and enhancers under biobank-scale data and conduct gene-based association test for related samples under fitted null GLMM.
 
 ## Prerequisites
-R (recommended version >= 3.5.0)
+R (recommended version >= 3.6.0)
 
 ## Dependencies
 BIGKnock depends on R packages SKAT, Matrix, MASS, SPAtest, CompQuadForm and irlba. Make sure to install those packages before installing BIGKnock.

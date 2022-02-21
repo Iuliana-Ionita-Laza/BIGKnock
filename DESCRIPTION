@@ -1,0 +1,23 @@
+Package: BIGKnock
+Type: Package
+Title: BIobank-scale Gene-based association test via Knockoffs
+Version: 0.1
+Author: Shiyang Ma, Zihuai He, Iuliana Ionita-Laza
+Maintainer: Shiyang Ma <sm4857@cumc.columbia.edu>
+Description: Functions for knockoff generation of gene and enhancers under biobank-scale data and conduct gene-based association test for related samples under fitted null GLMM.
+License: GPL-3
+Depends: R(>= 3.5.0)
+Imports:
+    SKAT,
+    Matrix, 
+    MASS, 
+    SPAtest,
+    CompQuadForm,
+    irlba
+NeedsCompilation: no
+Repository: CRAN    
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+

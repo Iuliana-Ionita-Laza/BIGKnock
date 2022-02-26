@@ -23,10 +23,10 @@ devtools::install_github("Iuliana-Ionita-Laza/BIGKnock")
 The current version is 0.1 (February 21, 2022).
 
 ## Usage
-Please see the BIGKnock <a href="https://github.com/Iuliana-Ionita-Laza/BIGKnock/blob/master/BIGKnock_0.1.pdf"> **user manual** </a> for detailed usage of BIGKnock package. 
+Please see the BIGKnock <a href="https://github.com/Iuliana-Ionita-Laza/BIGKnock/blob/master/docs/BIGKnock_0.1.pdf"> **user manual** </a> for detailed usage of BIGKnock package. 
 
 
-We implement [SAIGE/SAIGE-Gene](https://github.com/weizhouUMICH/SAIGE) package for Step 1: Construct the sparse GRM and Step 2: Fit the null GLMMs. Please see the <a href="https://htmlpreview.github.io/?https://github.com/Iuliana-Ionita-Laza/BIGKnock/blob/master/BIGKnock_vignette.html">**tutorial**</a> for more details.
+We implement [SAIGE/SAIGE-Gene](https://github.com/weizhouUMICH/SAIGE) package for Step 1: Construct the sparse GRM and Step 2: Fit the null GLMMs. Please see the <a href="https://htmlpreview.github.io/?https://github.com/Iuliana-Ionita-Laza/BIGKnock/blob/master/docs/BIGKnock_vignette.html">**tutorial**</a> for more details.
 
 ## Contact
 If you have any questions about BIGKnock please contact

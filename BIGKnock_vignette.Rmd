@@ -1,0 +1,227 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
+<style>
+  .main-container {
+    max-width: 1200px !important;
+  }
+</style>
+<style type="text/css">
+.main-container {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+---
+title: "BIGKnock"
+author: "Shiyang Ma"
+date: "2/21/2022"
+output: rmarkdown::html_vignette
+vignette: >
+ %\VignetteEngine{knitr::rmarkdown}
+ %\VignetteIndexEntry{BIGKnock}
+ %\VignetteEncoding{UTF-8}
+---
+
+The BIGKnock R package accompanies with paper 'Causal gene prioritization via knockoff analysis of biobank-scale data with applications to UK Biobank', which is designed for biobank-scale gene-based association test via Knockoffs. The package contains functions for knockoff generation of gene and enhancers under biobank scale data and conduct gene-based association test for related samples under fitted null GLMM. 
+
+The BIGKnock method contains following steps: 
+
+Step 0: Knockoff generation
+
+Step 1: Construct the sparse GRM
+
+Step 2: Fit the null GLMMs for binary and quantitative traits 
+
+Step 3: Perform the gene-based test for each gene using the fitted null GLMM and estimated variance ratio obtained in step 2. 
+
+#### Example dataset:
+The example genotype data is extracted from the 'plinkforGRM_1000samples_10kMarkers' plink data in the extdata folder of SAIGE package (https://github.com/weizhouUMICH/SAIGE), which contains 1,000 samples and 10,000 markers. 
+
+```{r data prepartion, include=T,message=F,error=F,warning=F}
+#library(devtools)
+#devtools::install_github("Iuliana-Ionita-Laza/BIGKnock")
+
+setwd("~/Desktop/package/extdata")
+library(BIGKnock)
+library(Matrix)
+library(seqminer)
+library(SKAT)
+library(Matrix)
+library(MASS)
+library(SPAtest)
+library(CompQuadForm) 
+library(data.table)
+library(irlba)
+library(seqminer)
+
+#Download the 'plinkforGRM_1000samples_10kMarkers' plink data in the extdata folder of SAIGE package.
+filename = "./plinkforGRM_1000samples_10kMarkers"
+sampleIndex = seq(1000)
+
+markerIndex.gene = 5001:5200
+G_gene_buffer_example <- Matrix(readPlinkToMatrixByIndex(filename, sampleIndex, markerIndex.gene),sparse=T)
+pos_gene_buffer_example=as.numeric(gsub("^.*\\:","",colnames(G_gene_buffer_example)))
+
+markerIndex_gene_buffer_surround=4001:6000
+G_gene_buffer_surround_example <-Matrix(readPlinkToMatrixByIndex(filename, sampleIndex, markerIndex_gene_buffer_surround),sparse=T)
+pos_gene_bufferr_surround_example=as.numeric(gsub("^.*\\:","",colnames(G_gene_buffer_surround_example)))
+
+Knock.generation.gene.buffer.example=list(G_gene_buffer_surround=G_gene_buffer_surround_example,
+                                            pos_gene_buffer=pos_gene_buffer_example)
+#save(Knock.generation.gene.buffer.example, file = "./Knock.generation.gene.buffer.example.RData",compress="bzip2")
+
+markerIndex.enhancer = 5551:5560
+G_enhancer_example <- Matrix(readPlinkToMatrixByIndex(filename, sampleIndex, markerIndex.enhancer),sparse=T)
+pos_enhancer_example=as.numeric(gsub("^.*\\:","",colnames(G_enhancer_example)))
+
+markerIndex_enhancer_surround=5251:5750
+G_enhancer_surround_example <- Matrix(readPlinkToMatrixByIndex(filename, sampleIndex, markerIndex_enhancer_surround),sparse=T)
+pos_enhancer_surround_example=as.numeric(gsub("^.*\\:","",colnames(G_enhancer_surround_example)))
+
+Knock.generation.enhancer.example=list(G_enhancer_surround=G_enhancer_surround_example,
+                                         pos_enhancer=pos_enhancer_example)
+#save(Knock.generation.enhancer.example, file = "./Knock.generation.enhancer.example.RData",compress="bzip2")
+```
+
+
+### Step 0: knockoff generation
+```{r Step 0, include=T,message=F,error=F,warning=F}
+### Knockoff generation of gene buffer region +-100kb surrounding region ###
+data('Knock.generation.gene.buffer.example')
+G_gene_buffer_surround=Matrix(Knock.generation.gene.buffer.example$G_gene_buffer_surround)
+pos_gene_buffer=Knock.generation.gene.buffer.example$pos_gene_buffer
+gene_buffer_start=min(pos_gene_buffer)
+gene_buffer_end=max(pos_gene_buffer)
+
+G_gene_buffer_knockoff=Knockoffgeneration.gene.buffer(G_gene_buffer_surround=G_gene_buffer_surround,
+                                               gene_buffer_start=gene_buffer_start,
+                                               gene_buffer_end=gene_buffer_end,
+                                               M=5,surround.region=100000,LD.filter=0.75)
+#M=5 knockoffs
+G_gene_buffer_knockoff1=G_gene_buffer_knockoff[1,,]
+G_gene_buffer_knockoff2=G_gene_buffer_knockoff[2,,]
+G_gene_buffer_knockoff3=G_gene_buffer_knockoff[3,,]
+G_gene_buffer_knockoff4=G_gene_buffer_knockoff[4,,]
+G_gene_buffer_knockoff5=G_gene_buffer_knockoff[5,,]
+
+### Knockoff generation of enhancer +-50kb surrounding region ###
+data('Knock.generation.enhancer.example')
+G_enhancer_surround=Matrix(Knock.generation.enhancer.example$G_enhancer_surround)
+pos_enhancer=Knock.generation.enhancer.example$pos_enhancer
+enhancer_start=min(pos_enhancer)
+enhancer_end=max(pos_enhancer)
+
+G_enhancer_knockoff=Knockoffgeneration.enhancer(G_enhancer_surround=G_enhancer_surround,
+                                             enhancer_start=enhancer_start,
+                                             enhancer_end=enhancer_end,
+                                             M=5,surround.region=50000,LD.filter=0.75)
+#M=5 knockoffs
+G_enhancer_knockoff1=G_enhancer_knockoff[1,,]
+G_enhancer_knockoff2=G_enhancer_knockoff[2,,]
+G_enhancer_knockoff3=G_enhancer_knockoff[3,,]
+G_enhancer_knockoff4=G_enhancer_knockoff[4,,]
+G_enhancer_knockoff5=G_enhancer_knockoff[5,,]
+```
+
+### Step 1: Construct the sparse GRM
+For step 1, we implement SAIGE/SAIGE-Gene package and generate sparse GRM with threshold 0.125 using the example plink data. Please follow the instruction in https://github.com/weizhouUMICH/SAIGE to install SAIGE/SAIGE-Gene package from conda. Then activate saige in conda (terminal), open R and run the following code to create sparse GRM.
+
+```{r Step 1, include=T,message=F,error=F,warning=F}
+# conda activate saige
+# R
+# library(SAIGE)
+# packageVersion('SAIGE') #‘0.44.5’
+# setwd("~/Desktop/package/extdata")
+# set.seed(12345)
+# SparseGRM=createSparseGRM(plinkFile = "./plinkforGRM_1000samples_10kMarkers",
+#                            outputPrefix="./sparseGRM_1000samples_10kMarkers",numRandomMarkerforSparseKin = 2000,relatednessCutoff = 0.125,
+#                            memoryChunk = 2,isDiagofKinSetAsOne = FALSE,nThreads = 1,minMAFforGRM = 0.01,isSetGeno=TRUE,isWritetoFiles=TRUE)
+
+##Obtain running createSparseGRM in SAIGE, we can obtain the 1000 by 1000 sparse GRM as below:
+library(Matrix)
+sparseSigma=readMM('~/Desktop/package/extdata/sparseGRM_1000samples_10kMarkers_relatednessCutoff_0.125_2000_randomMarkersUsed.sparseGRM.mtx')
+dim(sparseSigma)
+```
+
+### Step 2: Fit the null GLMMs using SAIGE
+
+```{r Step 2, include=T,message=F,error=F,warning=F}
+#simulated continuous phenotype, covariates and inidividual id for 1000 samples.
+set.seed(12345)
+Y<-as.matrix(rnorm(1000,0,1))
+X<-as.matrix(rnorm(1000,0,1))
+ID<-rownames(Knock.generation.gene.buffer.example$G_gene_buffer_surround)
+phenotype.example=data.frame(Y,X,ID)
+#write.table(phenotype.example,'phenotype.example.tsv',row.names=FALSE)
+
+#Run this in conda:
+##note that we use SparseGRM to fit null glmm and we use invNormalize=TRUE for quantitative traits
+#fitNULLGLMM(plinkFile = "./plinkforGRM_1000samples_10kMarkers", 
+#             phenoFile = "./phenotype.example.tsv", phenoCol = "Y",
+#             traitType = "quantitative", covarColList ='X',invNormalize=TRUE,
+#             sampleIDColinphenoFile = "ID",  LOCO = FALSE,isCateVarianceRatio=FALSE,IsOverwriteVarianceRatioFile=FALSE,
+#             sparseGRMFile='./sparseGRM_1000samples_10kMarkers_relatednessCutoff_0.125_2000_randomMarkersUsed.sparseGRM.mtx',
+#             sparseGRMSampleIDFile='./sparseGRM_1000samples_10kMarkers_relatednessCutoff_0.125_2000_randomMarkersUsed.sparseGRM.mtx.sampleIDs.txt',
+#             outputPrefix = "./null_glmm",IsSparseKin = TRUE,nThreads = 1,useSparseGRMtoFitNULL=TRUE)
+
+#Finally we obtained the fitted null GLMM and variance ratio:
+load('~/Desktop/package/extdata/null_glmm.rda')
+result.null.model.GLMM=modglmm
+length(result.null.model.GLMM$sampleID) #1000
+
+#variance ratio
+ratio=as.numeric(fread('~/Desktop/package/extdata/null_glmm.varianceRatio.txt'))
+ratio #0.9773041
+
+GeneScan3D.UKB.GLMM.example=list(result.null.model.GLMM=result.null.model.GLMM,
+                                 ratio=ratio,sparseSigma=sparseSigma,
+                                 G_gene_buffer=G_gene_buffer_example,pos_gene_buffer=pos_gene_buffer,
+                                 G_gene_buffer_knockoff1=G_gene_buffer_knockoff1,
+                                 G_enhancer=G_enhancer_example,G_enhancer_knockoff1=G_enhancer_knockoff1)
+#save(GeneScan3D.UKB.GLMM.example, file = "~/Desktop/package/extdata/GeneScan3D.UKB.GLMM.example.RData",compress="xz")
+
+```
+
+### Step 3: perform the gene-based test for each gene using the fitted null GLMM and estimated variance ratio obtained in step 2.
+Conduct GeneScan3D analysis on UKBB data using fitted null GLMM result
+```{r Step 3, include=T,message=F,error=F,warning=F}
+data("GeneScan3D.UKB.GLMM.example")
+#fitted null GLMM obtained by SAIGE
+result.null.model.GLMM=GeneScan3D.UKB.GLMM.example$result.null.model.GLMM
+#variance ratio
+ratio=GeneScan3D.UKB.GLMM.example$ratio
+#n by n sparse Sigma matrix 
+sparseSigma=GeneScan3D.UKB.GLMM.example$sparseSigma
+G_gene_buffer=GeneScan3D.UKB.GLMM.example$G_gene_buffer
+pos_gene_buffer=GeneScan3D.UKB.GLMM.example$pos_gene_buffer
+G_gene_buffer_knockoff1=GeneScan3D.UKB.GLMM.example$G_gene_buffer_knockoff1
+G_enhancer=GeneScan3D.UKB.GLMM.example$G_enhancer
+G_enhancer_knockoff1=GeneScan3D.UKB.GLMM.example$G_enhancer_knockoff1
+Gsub.id=result.null.model.GLMM$sampleID
+
+G_EnhancerAll=G_enhancer
+p_EnhancerAll=dim(G_enhancer)[2]
+G_EnhancerAll_knockoff1=G_enhancer_knockoff1
+p_EnhancerAll_knockoff1=dim(G_enhancer_knockoff1)[2]
+R=1
+
+result.GeneScan3D_orginal=GeneScan3D.UKB.GLMM(G=G_gene_buffer,G.EnhancerAll=G_EnhancerAll,R=R,
+                                             p_Enhancer=p_EnhancerAll,window.size=c(1000,5000,10000),pos=pos_gene_buffer,
+                                             MAC.threshold=10,MAF.threshold=0.01,Gsub.id=Gsub.id,
+                                             result.null.model.GLMM,outcome='C',
+                                             sparseSigma=sparseSigma,ratio=ratio)
+result.GeneScan3D_orginal$GeneScan3D.Cauchy.pvalue[1]
+
+
+result.GeneScan3D_knockoff1=GeneScan3D.UKB.GLMM(G=G_gene_buffer_knockoff1,G.EnhancerAll=G_EnhancerAll_knockoff1,R=R,
+                                           p_Enhancer=p_EnhancerAll,window.size=c(1000,5000,10000),pos=pos_gene_buffer,
+                                           MAC.threshold=10,MAF.threshold=0.01,Gsub.id=Gsub.id,
+                                             result.null.model.GLMM,outcome='C',
+                                             sparseSigma=sparseSigma,ratio=ratio)
+result.GeneScan3D_knockoff1$GeneScan3D.Cauchy.pvalue[1]
+```

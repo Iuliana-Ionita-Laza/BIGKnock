@@ -18,7 +18,7 @@ library(devtools)
 
 devtools::install_github("Iuliana-Ionita-Laza/BIGKnock")
 
-The current version is 0.1 (February 26, 2022).
+The current version is 0.1 (February 21, 2022).
 
 ## Usage
 Please see the BIGKnock <a href="https://github.com/Iuliana-Ionita-Laza/BIGKnock/blob/master/BIGKnock_0.1.pdf"> **user manual** </a> for detailed usage of BIGKnock package. Please see the <a href="https://htmlpreview.github.io/?https://github.com/Iuliana-Ionita-Laza/BIGKnock/blob/master/BIGKnock_vignette.html">**tutorial**</a> of using the BIGKnock package.

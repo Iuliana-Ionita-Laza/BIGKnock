@@ -13,6 +13,8 @@ R (recommended version >= 3.6.0)
 ## Dependencies
 BIGKnock depends on R packages SKAT, Matrix, MASS, SPAtest, CompQuadForm and irlba. Make sure to install those packages before installing BIGKnock.
     
+[SAIGE/SAIGE-Gene package](https://github.com/weizhouUMICH/SAIGE) is used for creating sparse GRM and fitting the null GLMMs.
+
 ## Installation
 library(devtools) 
 
@@ -21,7 +23,10 @@ devtools::install_github("Iuliana-Ionita-Laza/BIGKnock")
 The current version is 0.1 (February 21, 2022).
 
 ## Usage
-Please see the BIGKnock <a href="https://github.com/Iuliana-Ionita-Laza/BIGKnock/blob/master/BIGKnock_0.1.pdf"> **user manual** </a> for detailed usage of BIGKnock package. Please see the <a href="https://htmlpreview.github.io/?https://github.com/Iuliana-Ionita-Laza/BIGKnock/blob/master/BIGKnock_vignette.html">**tutorial**</a> of using the BIGKnock package.
+Please see the BIGKnock <a href="https://github.com/Iuliana-Ionita-Laza/BIGKnock/blob/master/BIGKnock_0.1.pdf"> **user manual** </a> for detailed usage of BIGKnock package. 
+
+
+We implement [SAIGE/SAIGE-Gene](https://github.com/weizhouUMICH/SAIGE) package for Step 1: Construct the sparse GRM and Step 2: Fit the null GLMMs. Please see the <a href="https://htmlpreview.github.io/?https://github.com/Iuliana-Ionita-Laza/BIGKnock/blob/master/BIGKnock_vignette.html">**tutorial**</a> for more details.
 
 ## Contact
 If you have any questions about BIGKnock please contact

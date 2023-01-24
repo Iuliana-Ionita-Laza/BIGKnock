@@ -37,7 +37,7 @@ If you want to submit a issue concerning the software please do so using the **B
 
 
 ## Reference
-* Ma, S., Wang, C., Khan, A., Liu, L., Dalgleish, J., Kiryluk, K., He, Z. and Ionita-Laza, I. (2022). ["Fine-mapping gene-based associations via knockoff analysis of biobank-scale data with applications to UK Biobank"](http://www.columbia.edu/~ii2135/ms_BIGKnock.pdf)
+* Ma, S., Wang, C., Khan, A., Liu, L., Dalgleish, J., Kiryluk, K., He, Z. and Ionita-Laza, I. (2022). ["BIGKnock: Fine-mapping gene-based associations via knockoff analysis of biobank-scale data".](http://www.columbia.edu/~ii2135/ms_BIGKnock.pdf) _Genome Biology_. 
 * He, Z., Guen, Y. L., Liu, L., Lee, J., Ma, S., Yang, A. C.,  Liu. X., Rutledge, J., Losada, P. M., Song, B., Belloy, M. E., Butler, R. R., Longo, F. M., Tang, H., Mormino, E. C., Wyss-Coray, T., Greicius, M. D. and Ionita-Laza, I. (2021) ["Genome-wide analysis of common and rare variants via multiple knockoffs at biobank scale, with an application to Alzheimer disease genetics".](https://doi.org/10.1016/j.ajhg.2021.10.009) _American Journal of Human Genetics_, **108**, 2336-2353.
 
 

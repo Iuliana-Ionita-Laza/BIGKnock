@@ -42,4 +42,4 @@ If you want to submit a issue concerning the software please do so using the **B
 
 
 ## License
-This software is licensed under GPLv3.
+This software is licensed under GPL-3.

@@ -30,7 +30,7 @@ We implement [SAIGE/SAIGE-Gene](https://github.com/weizhouUMICH/SAIGE) package f
 ## Contact
 If you have any questions about BIGKnock please contact
 
-- <sm4857@cumc.columbia.edu>
+- <mashiyang1991@sjtu.edu.cn>
 
 If you want to submit a issue concerning the software please do so using the **BIGKnock** [Github repository](https://github.com/Iuliana-Ionita-Laza/BIGKnock/issues).
 
